@@ -1,4 +1,6 @@
-# Elysia with Bun runtime
+# Enso
+
+A collaborative music platform where users create shared rooms, merge playlists, and discover mood-based song recommendations powered by AI
 
 ## Getting Started
 To get started with this template, simply paste this command into your terminal:
