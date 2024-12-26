@@ -4,15 +4,11 @@ import { initRoutes } from "./routes";
 
 
 const { PORT } = environment();
-
-const app = new Elysia().get("/", () => {
-  return {
-    message: 'Hello from Enso'
-  }
-}).listen(PORT);
+const app = new Elysia();
 
 initRoutes(app);
 
-console.log(
+app.listen(PORT, () => console.log(
   `🎵 Enso's server is running at ${app.server?.hostname}:${app.server?.port}`
-);
+));
+
