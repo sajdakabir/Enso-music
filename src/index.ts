@@ -13,6 +13,6 @@ app.use(swagger());
 initRoutes(app);
 
 app.listen(PORT, () => console.log(
-  `🎵 Enso's server is running at ${app.server?.hostname}:${app.server?.port}`
+  `🦋𝄞⨾𓍢 Enso's server is running at ${app.server?.hostname}:${app.server?.port} 𝄞⨾𓍢ִ໋`
 ));
 

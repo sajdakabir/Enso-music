@@ -4,9 +4,7 @@ import { login } from "../services/auth.service";
 const authRoute = new Elysia();
 
 
-authRoute.get("/login", () => {
-    return login();
-});
+authRoute.get("/login", () => login());
 
 
 export { authRoute };

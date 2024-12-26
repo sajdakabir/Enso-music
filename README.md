@@ -15,3 +15,5 @@ bun run dev
 ```
 
 Open http://localhost:9999 with your browser to see the result.
+
+to get the swagger docs, go to http://localhost:9999/swagger
