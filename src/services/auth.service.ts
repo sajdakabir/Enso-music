@@ -15,25 +15,63 @@ export const login = () => {
     };
 };
 
-export const handleCallback = async (query:{code: string}) => {
-const {code} = query;
-    console.log("code", code)
+export const handleCallback = async (query: { code: string }) => {
+    const { code } = query;
 
-    const response = await fetch('https://accounts.spotify.com/api/token', {
+    const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
             Authorization: `Basic ${Buffer.from(
                 `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
-            ).toString('base64')}`
+            ).toString('base64')}`,
         },
         body: new URLSearchParams({
             code,
             redirect_uri: REDIRECT_URI!,
-            grant_type: 'authorization_code'
-        })
+            grant_type: 'authorization_code',
+        }),
     });
 
-    const data = await response.json();
-    return data;
+    const tokenData = await tokenResponse.json();
+
+    if (!tokenResponse.ok) {
+        throw new Error(`Failed to get access token: ${tokenData.error}`);
+    }
+
+    console.log('Access Token Data:', tokenData);
+
+    const { access_token, refresh_token } = tokenData;
+
+    const userResponse = await fetch('https://api.spotify.com/v1/me', {
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+        },
+    });
+
+    const userData = await userResponse.json();
+
+    if (!userResponse.ok) {
+        throw new Error(`Failed to fetch user details: ${userData.error}`);
+    }
+
+    console.log('User Data:', userData);
+
+    // Step 3: Save user data to your database (example logic)
+    const user = {
+        id: userData.id,
+        displayName: userData.display_name,
+        email: userData.email,
+        profileUrl: userData.external_urls?.spotify,
+        image: userData.images?.[0]?.url || null,
+        accessToken: access_token,
+        refreshToken: refresh_token,
+    };
+
+    // Replace with your DB logic
+    await createUser(user);
+
+    return tokenData;
 };
+
+export const createUser = async (user: any) => {}
