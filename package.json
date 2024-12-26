@@ -8,6 +8,7 @@
     "migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@elysiajs/swagger": "^1.2.0",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.0",
     "elysia": "latest",
