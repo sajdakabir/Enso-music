@@ -1,18 +1,13 @@
 import { Elysia } from "elysia";
+import { environment } from "./loaders/environment.loader";
+import { db } from "./db/drizzle";
 
-import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/node-postgres';
-
-const db = drizzle(process.env.DATABASE_URL!);
-
-const port = process.env.PORT || 9999;
-
+const { PORT } = environment();
 const app = new Elysia().get("/", () => {
   return {
     message: 'Hello from Enso'
   }
-}).listen(port);
-
+}).listen(PORT);
 console.log(
   `🎵 Enso's server is running at ${app.server?.hostname}:${app.server?.port}`
 );
