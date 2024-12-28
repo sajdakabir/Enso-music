@@ -1,5 +1,8 @@
 import { environment } from "../loaders/environment.loader";
 import { fetch } from "bun";
+import { IUserCreate } from "../types";
+import { db } from "../db/drizzle";
+import { user } from "../db/schema";
 
 const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, REDIRECT_URI } = environment();
 
@@ -57,15 +60,11 @@ export const handleCallback = async (query: { code: string }) => {
 
     console.log('User Data:', userData);
 
-    // Step 3: Save user data to your database (example logic)
     const user = {
-        id: userData.id,
         displayName: userData.display_name,
         email: userData.email,
         profileUrl: userData.external_urls?.spotify,
-        image: userData.images?.[0]?.url || null,
-        accessToken: access_token,
-        refreshToken: refresh_token,
+        image: userData.images?.[0]?.url || null
     };
 
     // Replace with your DB logic
@@ -74,4 +73,12 @@ export const handleCallback = async (query: { code: string }) => {
     return tokenData;
 };
 
-export const createUser = async (user: any) => {}
+export const createUser = async (userData: IUserCreate) => {
+    try {
+        const newUser = await db.insert(user).values(userData);
+        return newUser;
+    } catch (error) {
+        console.error('Error creating/updating user:', error);
+        throw error;
+    }
+}
