@@ -15,6 +15,13 @@
       "when": 1735391214051,
       "tag": "0001_illegal_mockingbird",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735396964355,
+      "tag": "0002_wakeful_vision",
+      "breakpoints": true
     }
   ]
 }

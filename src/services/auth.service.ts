@@ -2,7 +2,7 @@ import { environment } from "../loaders/environment.loader";
 import { fetch } from "bun";
 import { IUserCreate } from "../types";
 import { db } from "../db/drizzle";
-import { user } from "../db/schema";
+import { User } from "../db/schema";
 import { eq } from "drizzle-orm";
 
 const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, REDIRECT_URI } = environment();
@@ -43,7 +43,7 @@ export const handleCallback = async (query: { code: string }) => {
         throw new Error(`Failed to get access token: ${tokenData.error}`);
     }
 
-    const { access_token, refresh_token } = tokenData;
+    const { access_token } = tokenData;
 
     const userResponse = await fetch('https://api.spotify.com/v1/me', {
         headers: {
@@ -85,7 +85,7 @@ export const createUser = async (userData: IUserCreate) => {
                 };
             }
         }
-        const newUser = await db.insert(user).values(userData);
+        const newUser = await db.insert(User).values(userData);
         return newUser;
     } catch (error) {
         console.error('Error creating/updating user:', error);
@@ -95,7 +95,7 @@ export const createUser = async (userData: IUserCreate) => {
 
 export const getUserByEmail = async (email: string) => {
     try {
-        const me = await db.select().from(user).where(eq(user.email, email));
+        const me = await db.select().from(User).where(eq(User.email, email));
         if (!me) {
             return {
                 message: "User not found",
