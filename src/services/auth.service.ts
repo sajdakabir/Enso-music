@@ -3,6 +3,7 @@ import { fetch } from "bun";
 import { IUserCreate } from "../types";
 import { db } from "../db/drizzle";
 import { user } from "../db/schema";
+import { eq } from "drizzle-orm";
 
 const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, REDIRECT_URI } = environment();
 
@@ -42,8 +43,6 @@ export const handleCallback = async (query: { code: string }) => {
         throw new Error(`Failed to get access token: ${tokenData.error}`);
     }
 
-    console.log('Access Token Data:', tokenData);
-
     const { access_token, refresh_token } = tokenData;
 
     const userResponse = await fetch('https://api.spotify.com/v1/me', {
@@ -58,7 +57,6 @@ export const handleCallback = async (query: { code: string }) => {
         throw new Error(`Failed to fetch user details: ${userData.error}`);
     }
 
-    console.log('User Data:', userData);
 
     const user = {
         displayName: userData.display_name,
@@ -67,18 +65,51 @@ export const handleCallback = async (query: { code: string }) => {
         image: userData.images?.[0]?.url || null
     };
 
-    // Replace with your DB logic
     await createUser(user);
 
-    return tokenData;
+    return {
+        status: 200,
+        data: tokenData
+    };
 };
 
 export const createUser = async (userData: IUserCreate) => {
     try {
+        if (userData.email) {
+            const me = await getUserByEmail(userData.email);
+            if (me) {
+                return {
+                    message: "User already exists",
+                    status: 400,
+                    data: me
+                };
+            }
+        }
         const newUser = await db.insert(user).values(userData);
         return newUser;
     } catch (error) {
         console.error('Error creating/updating user:', error);
         throw error;
     }
+}
+
+export const getUserByEmail = async (email: string) => {
+    try {
+        const me = await db.select().from(user).where(eq(user.email, email));
+        if (!me) {
+            return {
+                message: "User not found",
+                status: 404,
+                data: null
+            };
+        }
+        return {
+            status: 200,
+            data: me
+        };
+    } catch (error) {
+        console.error('Error fetching user by email:', error);
+        throw error
+    }
+
 }
