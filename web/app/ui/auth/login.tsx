@@ -1,4 +1,7 @@
+const handleSpotifyLogin = async () => {
+    console.log("Spotify login");
 
+}
 
 const InitialUi = () => {
     return (
@@ -10,9 +13,11 @@ const InitialUi = () => {
             </div>
             <div className="flex flex-col gap-3 mt-6 md:px-8 2xl:px-20">
 
-               <button className="bg-white text-gray-700 px-4 py-2 rounded-md text-sm font-semibold">
+               <button className="bg-white text-gray-700 px-4 py-2 rounded-md text-sm font-semibold"
+               onClick={handleSpotifyLogin}
+               >
+                Continue with Spotify
                 
-                <span>Continue with Spotify</span>
                </button>
             </div>
             </div>
