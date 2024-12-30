@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import Login from "../ui/auth/login";
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,8 +11,8 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div>
-      <h1>Enso</h1>
+      <Login />
     </div>
-);
+  );
 }
 
