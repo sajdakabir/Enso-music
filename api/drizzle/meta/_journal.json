@@ -22,6 +22,13 @@
       "when": 1735396964355,
       "tag": "0002_wakeful_vision",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1736872924691,
+      "tag": "0003_sweet_steel_serpent",
+      "breakpoints": true
     }
   ]
 }
