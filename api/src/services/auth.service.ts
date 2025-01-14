@@ -22,6 +22,11 @@ export const login = () => {
 export const handleCallback = async (query: { code: string }) => {
     const { code } = query;
 
+    if (!code) {
+        const error = new Error("No code provided");
+        return { error };
+    }
+
     const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
         headers: {
